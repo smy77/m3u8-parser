@@ -4,6 +4,7 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.*;
 import io.lindstrom.m3u8.model.StandardMediaPlaylistBuilder;
 
+
 public class AdSmartMediaPlaylistParser extends AbstractMediaPlaylistParser<AdSmartMediaPlaylist> {
 
     public AdSmartMediaPlaylistParser() {

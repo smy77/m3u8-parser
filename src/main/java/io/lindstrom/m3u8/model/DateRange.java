@@ -2,7 +2,7 @@ package io.lindstrom.m3u8.model;
 
 
 import org.immutables.value.Value;
-
+import io.lindstrom.m3u8.model.DateRangeBuilder;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Optional;
