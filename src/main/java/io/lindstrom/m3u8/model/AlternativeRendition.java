@@ -92,7 +92,7 @@ public interface AlternativeRendition {
     /**
      * @return rendition attributes CHANNELS
      */
-    List<String> channels();
+    Optional<Channels> channels();
 
     static Builder builder() {
         return new Builder();

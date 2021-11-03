@@ -128,6 +128,11 @@ class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends AbstractPlayl
         builderWrapper.newSegmentBuilder(MediaSegment.builder());
     }
 
+    @Override
+    void onComment(MediaPlaylistCreator<P> builder, String value) throws PlaylistParserException {
+        builder.playlistBuilder().addComments(value);
+    }
+
     public void addOptionalTagsSupport(TagsSupport tagsSupport) {
         this.optionalTagsSupport.add(tagsSupport);
     }

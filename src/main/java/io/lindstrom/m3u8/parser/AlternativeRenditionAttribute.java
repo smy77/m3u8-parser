@@ -160,18 +160,13 @@ enum AlternativeRenditionAttribute implements Attribute<AlternativeRendition, Al
     CHANNELS {
         @Override
         public void read(AlternativeRendition.Builder builder, String value) throws PlaylistParserException {
-            builder.channels((Iterable<String>) ParserUtils.parseChannels(value));
+            builder.channels(ParserUtils.parseChannels(value));
         }
 
         @Override
         public void write(AlternativeRendition value, TextBuilder textBuilder) {
-            
+            value.channels().ifPresent(v -> textBuilder.addQuoted(name(), ParserUtils.writeChannels(v)));
         }
-
-//        @Override
-//        public void write(AlternativeRendition value, TextBuilder textBuilder) {
-//            value.channels().ifPresent(v -> textBuilder.addQuoted(name(), ParserUtils.writeChannels(v)));
-//        }
     };
 
     final static Map<String, AlternativeRenditionAttribute> attributeMap = ParserUtils.toMap(values(), Attribute::key);

@@ -89,14 +89,16 @@ abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistCrea
 
             if (line.startsWith("#EXT")) {
                 int colonPosition = line.indexOf(':');
-                String prefix = colonPosition > 0 ? line.substring(0, colonPosition) : line;
+                String prefix = colonPosition > 0 ? line.substring(1, colonPosition) : line.substring(1);
                 String attributes = colonPosition > 0 ? line.substring(colonPosition + 1) : "";
 
                 onTag(builder, prefix, attributes, lineIterator);
-            } else if (!(line.startsWith("#") || line.isEmpty())) {
-                onURI(builder, line);
-            }   else {
-                onURI(builder, line); // <-- TODO silly?
+            } else if (!line.isEmpty()) {
+                if (line.startsWith("#")) {
+                    onComment(builder, line.substring(1));
+                } else {
+                    onURI(builder, line); // <-- TODO silly?
+                }
             }
         }
 
@@ -108,6 +110,8 @@ abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistCrea
     abstract void onTag(B builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException;
 
     abstract void onURI(B builder, String uri) throws PlaylistParserException;
+
+    abstract void onComment(B builder, String value) throws PlaylistParserException;
 
     T build(B factory){
         return factory.create();
@@ -130,8 +134,6 @@ abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistCrea
         if (playlist.independentSegments()) {
             stringBuilder.append(EXT_X_INDEPENDENT_SEGMENTS).append('\n');
         }
-        playlist.variables().forEach(variable -> stringBuilder.append(EXT_X_DEFINE)
-                .append(":").append(variable).append('\n'));
         write(playlist, stringBuilder);
         return stringBuilder.toString();
     }

@@ -53,7 +53,7 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
                     builder.characteristics(ParserUtils.split(value, ","));
                     break;
                 case CHANNELS:
-                    builder.channels((ParserUtils.split(value, "/")));
+                    builder.channels(ParserUtils.parseChannels(value));
                     break;
                 default:
                     throw new PlaylistParserException("Unknown key " + key);
@@ -80,10 +80,7 @@ class AlternativeRenditionParser extends AbstractLineParser<AlternativeRendition
         if (!alternativeRendition.characteristics().isEmpty()) {
             attributes.addQuoted(Tags.CHARACTERISTICS, String.join(",", alternativeRendition.characteristics()));
         }
-
-        if (!alternativeRendition.channels().isEmpty()) {
-            attributes.addQuoted(Tags.CHANNELS, String.join("/", alternativeRendition.channels()));
-        }
+        alternativeRendition.channels().ifPresent(value -> attributes.addQuoted(CHANNELS, value));
         return attributes.toString();
     }
 
