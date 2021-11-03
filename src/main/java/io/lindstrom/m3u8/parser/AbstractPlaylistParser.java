@@ -118,6 +118,13 @@ abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistCrea
     public String writePlaylistAsString(T playlist) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(EXTM3U).append('\n');
+        TextBuilder textBuilder = new TextBuilder(stringBuilder);
+
+        for (String comment : playlist.comments()) {
+            if (!comment.startsWith("EXT")) {
+                textBuilder.add("#").add(comment).add("\n");
+            }
+        }
         playlist.version().ifPresent(version -> stringBuilder.append(EXT_X_VERSION)
                 .append(":").append(version).append('\n'));
         if (playlist.independentSegments()) {
