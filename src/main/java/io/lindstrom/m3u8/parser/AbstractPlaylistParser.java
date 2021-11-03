@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 import static io.lindstrom.m3u8.parser.Tags.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistCreator<T>> {
+abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
     public T readPlaylist(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {
@@ -113,9 +113,7 @@ abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistCrea
 
     abstract void onComment(B builder, String value) throws PlaylistParserException;
 
-    T build(B factory){
-        return factory.create();
-    }
+    abstract T build(B builder);
 
     abstract void write(T playlist, StringBuilder stringBuilder);
 
@@ -134,6 +132,8 @@ abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistCrea
         if (playlist.independentSegments()) {
             stringBuilder.append(EXT_X_INDEPENDENT_SEGMENTS).append('\n');
         }
+        playlist.variables().forEach(variables -> stringBuilder.append(EXT_X_VERSION)
+                .append(":").append(variables).append('\n'));
         write(playlist, stringBuilder);
         return stringBuilder.toString();
     }

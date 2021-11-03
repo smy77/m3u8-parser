@@ -133,6 +133,11 @@ class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends AbstractPlayl
         builder.playlistBuilder().addComments(value);
     }
 
+    @Override
+    P build(MediaPlaylistCreator<P> builder) {
+        return builder.create();
+    }
+
     public void addOptionalTagsSupport(TagsSupport tagsSupport) {
         this.optionalTagsSupport.add(tagsSupport);
     }
