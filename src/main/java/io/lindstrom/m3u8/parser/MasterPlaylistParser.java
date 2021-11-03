@@ -76,15 +76,6 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     }
 
     @Override
-    void onComment(MasterPlaylist.Builder builder, String value) throws PlaylistParserException {
-        builder.addComments(
-                value
-        );
-        throw new PlaylistParserException("Unexpected URI in master playlist");
-    }
-
-
-    @Override
     void write(MasterPlaylist playlist, StringBuilder stringBuilder) {
         playlist.alternativeRenditions()
                 .forEach(value -> alternativeRenditionParser.write(value, stringBuilder));
@@ -94,6 +85,13 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
 
         playlist.iFrameVariants()
                 .forEach(value -> iFrameParser.write(value, stringBuilder));
+    }
+
+    @Override
+    void onComment(MasterPlaylist.Builder builder, String value) {
+        builder.addComments(
+                value
+        );
     }
 
     @Override
