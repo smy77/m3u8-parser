@@ -138,10 +138,6 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
                 .append(":").append(startTimeOffset).append('\n'));
 //        playlist.variables().forEach(variables -> stringBuilder.append(EXT_X_VERSION)
 //                .append(":").append(variables).append('\n'));
-//        playlist.mediaSegments().forEach(mediaSegment -> {
-//            for (MediaSegmentTag tag : MediaSegmentTag.tags.values()) {
-//                tag.write(mediaSegment, stringBuilder);
-//            }
         write(playlist, stringBuilder);
         return stringBuilder.toString();
     }

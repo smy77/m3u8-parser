@@ -33,6 +33,9 @@ public class MediaPlaylistParser extends AbstractMediaPlaylistParser<StandardMed
     public MediaPlaylistParser() {
         super(() -> new Builder());
     }
+    public MediaPlaylistParser(ParsingMode parsingMode) {
+        super(() -> new Builder());
+    }
 
     /**
      * Wrapper class for playlist and segment builders

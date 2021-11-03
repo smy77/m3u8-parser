@@ -122,14 +122,14 @@ class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends AbstractPlayl
     }
 
     @Override
-    void onURI(MediaPlaylistCreator<P> builderWrapper, String uri) throws PlaylistParserException {
+    void onURI(MediaPlaylistCreator<P> builderWrapper, String uri) {
         builderWrapper.segmentBuilder().uri(uri);
         builderWrapper.playlistBuilder().addMediaSegments(builderWrapper.segmentBuilder().build());
         builderWrapper.newSegmentBuilder(MediaSegment.builder());
     }
 
     @Override
-    void onComment(MediaPlaylistCreator<P> builder, String value) throws PlaylistParserException {
+    void onComment(MediaPlaylistCreator<P> builder, String value) {
         builder.playlistBuilder().addComments(value);
     }
 

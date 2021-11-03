@@ -22,15 +22,15 @@ public class ParserModeTest {
         parser.readPlaylist(Paths.get("src/test/resources/master/master-lenient.m3u8"));
     }
 
-//    @Test(expected = PlaylistParserException.class)
-//    public void strictParsingMediaPlaylist() throws IOException {
-//        MediaPlaylistParser parser = new MediaPlaylistParser(ParsingMode.STRICT);
-//        parser.readPlaylist(Paths.get("src/test/resources/media/media-lenient.m3u8"));
-//    }
-//
-//    @Test
-//    public void lenientParsingMediaPlaylist() throws IOException {
-//        MediaPlaylistParser parser = new MediaPlaylistParser(ParsingMode.LENIENT);
-//        parser.readPlaylist(Paths.get("src/test/resources/media/media-lenient.m3u8"));
-//    }
+    @Test(expected = PlaylistParserException.class)
+    public void strictParsingMediaPlaylist() throws IOException {
+        MediaPlaylistParser parser = new MediaPlaylistParser(ParsingMode.STRICT);
+        parser.readPlaylist(Paths.get("src/test/resources/media/media-lenient.m3u8"));
+    }
+
+    @Test
+    public void lenientParsingMediaPlaylist() throws IOException {
+        MediaPlaylistParser parser = new MediaPlaylistParser(ParsingMode.LENIENT);
+        parser.readPlaylist(Paths.get("src/test/resources/media/media-lenient.m3u8"));
+    }
 }
