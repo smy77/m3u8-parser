@@ -8,7 +8,6 @@ import java.util.Optional;
 /**
  * Media Playlist interface
  */
-@Value.Immutable
 public interface MediaPlaylist extends Playlist {
     int targetDuration();
 
@@ -50,10 +49,4 @@ public interface MediaPlaylist extends Playlist {
 
     List<RenditionReport> renditionReports();
 
-    static Builder builder() {
-        return new Builder();
-    }
-
-    class Builder extends MediaPlaylistBuilder {
-    }
 }

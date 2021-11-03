@@ -1,12 +1,8 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.MediaSegment;
-import io.lindstrom.m3u8.model.PartialSegment;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import io.lindstrom.m3u8.model.StandardMediaPlaylistBuilder;
+import io.lindstrom.m3u8.model.StandardMediaPlaylist;
 
 /**
  * MediaPlaylistParser can read and write Media Playlists according to RFC 8216 (HTTP Live Streaming).
@@ -29,84 +25,41 @@ import java.util.List;
  * System.out.println(parser.writePlaylistAsString(updated));
  * }
  * </pre>
- *
+ * <p>
  * This implementation is reusable and thread safe.
  */
-public class MediaPlaylistParser extends AbstractPlaylistParser<MediaPlaylist, MediaPlaylistParser.Builder> {
-    private final ParsingMode parsingMode;
+public class MediaPlaylistParser extends AbstractMediaPlaylistParser<StandardMediaPlaylist> {
 
     public MediaPlaylistParser() {
-        this(ParsingMode.STRICT);
-    }
-
-    public MediaPlaylistParser(ParsingMode parsingMode) {
-        this.parsingMode = parsingMode;
-    }
-
-    @Override
-    Builder newBuilder() {
-        return new Builder();
-    }
-
-    @Override
-    void onTag(Builder builderWrapper, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
-        if (MediaSegmentTag.EXT_X_PART.tag().equals(name)) {
-            builderWrapper.partialSegments.add(PartialSegmentAttribute.parse(attributes, parsingMode));
-        } else if (MediaPlaylistTag.tags.containsKey(name)) {
-            MediaPlaylistTag.tags.get(name).read(builderWrapper.playlistBuilder, attributes, parsingMode);
-        } else if (MediaSegmentTag.tags.containsKey(name)) {
-            MediaSegmentTag.tags.get(name).read(builderWrapper.segmentBuilder, attributes, parsingMode);
-        } else if (MediaPlaylistEndTag.tags.containsKey(name)){
-            MediaPlaylistEndTag.tags.get(name).read(builderWrapper.playlistBuilder, attributes, parsingMode);
-        } else if (parsingMode.failOnUnknownTags()) {
-            throw new PlaylistParserException("Tag not implemented: " + name);
-        }
-    }
-
-    @Override
-    void onComment(Builder builder, String value) {
-        builder.playlistBuilder.addComments(
-                value
-        );
-    }
-
-    @Override
-    void onURI(Builder builderWrapper, String uri) {
-        builderWrapper.segmentBuilder.uri(uri).partialSegments(builderWrapper.partialSegments);
-        builderWrapper.playlistBuilder.addMediaSegments(builderWrapper.segmentBuilder.build());
-        builderWrapper.segmentBuilder = MediaSegment.builder();
-        builderWrapper.partialSegments = new ArrayList<>();
-    }
-
-    @Override
-    MediaPlaylist build(Builder builderWrapper) {
-        return builderWrapper.playlistBuilder.partialSegments(builderWrapper.partialSegments).build();
-    }
-
-    @Override
-    void write(MediaPlaylist playlist, TextBuilder textBuilder) {
-        for (MediaPlaylistTag tag : MediaPlaylistTag.tags.values()) {
-            tag.write(playlist, textBuilder);
-        }
-
-        playlist.mediaSegments().forEach(mediaSegment -> {
-            for (MediaSegmentTag tag : MediaSegmentTag.tags.values()) {
-                tag.write(mediaSegment, textBuilder);
-            }
-            textBuilder.add(mediaSegment.uri()).add('\n');
-        });
-
-        for (MediaPlaylistEndTag tag : MediaPlaylistEndTag.tags.values()) {
-            tag.write(playlist, textBuilder);
-        }
+        super(() -> new Builder());
     }
 
     /**
      * Wrapper class for playlist and segment builders
      */
-    static class Builder {
-        private final MediaPlaylist.Builder playlistBuilder = MediaPlaylist.builder();
+    static class Builder implements MediaPlaylistCreator<StandardMediaPlaylist> {
+        private final StandardMediaPlaylistBuilder playlistBuilder = StandardMediaPlaylist.builder();
         private MediaSegment.Builder segmentBuilder = MediaSegment.builder();
-        private List<PartialSegment> partialSegments = new ArrayList<>();
+
+        @Override
+        public StandardMediaPlaylist create() {
+            return playlistBuilder.build();
+        }
+
+
+        @Override
+        public StandardMediaPlaylistBuilder playlistBuilder() {
+            return playlistBuilder;
+        }
+
+        @Override
+        public MediaSegment.Builder segmentBuilder() {
+            return segmentBuilder;
+        }
+
+        @Override
+        public void newSegmentBuilder(MediaSegment.Builder builder) {
+            this.segmentBuilder = builder;
+        }
     }
 }

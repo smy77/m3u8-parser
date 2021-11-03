@@ -1,17 +1,20 @@
 package io.lindstrom.m3u8.parser;
 
+import io.lindstrom.m3u8.model.MasterPlaylist;
 import io.lindstrom.m3u8.model.Playlist;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
+import static io.lindstrom.m3u8.parser.Tags.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public abstract class AbstractPlaylistParser<T extends Playlist, B> {
-    private static final String EXTM3U = "#EXTM3U";
+abstract class AbstractPlaylistParser<T extends Playlist, B extends PlaylistCreator<T>> {
 
     public T readPlaylist(InputStream inputStream) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8))) {
@@ -68,7 +71,7 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
         boolean extM3uFound = false;
         while (lineIterator.hasNext() && !extM3uFound) {
             String line = lineIterator.next();
-            if (EXTM3U.equals(line)) {
+            if (Tags.EXTM3U.equals(line)) {
                 extM3uFound = true;
             } else if (!line.isEmpty()) {
                 break; // invalid line  found
@@ -86,16 +89,14 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
             if (line.startsWith("#EXT")) {
                 int colonPosition = line.indexOf(':');
-                String prefix = colonPosition > 0 ? line.substring(1, colonPosition) : line.substring(1);
+                String prefix = colonPosition > 0 ? line.substring(0, colonPosition) : line;
                 String attributes = colonPosition > 0 ? line.substring(colonPosition + 1) : "";
 
                 onTag(builder, prefix, attributes, lineIterator);
-            } else if (!line.isEmpty()) {
-                if (line.startsWith("#")) {
-                    onComment(builder, line.substring(1));
-                } else {
-                    onURI(builder, line); // <-- TODO silly?
-                }
+            } else if (!(line.startsWith("#") || line.isEmpty())) {
+                onURI(builder, line);
+            }   else {
+                onURI(builder, line); // <-- TODO silly?
             }
         }
 
@@ -106,29 +107,25 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
 
     abstract void onTag(B builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException;
 
-    abstract void onComment(B builder, String value);
+    abstract void onURI(B builder, String uri) throws PlaylistParserException;
 
-    void onURI(B builder, String uri) throws PlaylistParserException {
-        throw new PlaylistParserException("Unexpected URI in playlist: " + uri);
+    T build(B factory){
+        return factory.create();
     }
 
-    abstract T build(B builder);
-
-    abstract void write(T playlist, TextBuilder textBuilder);
+    abstract void write(T playlist, StringBuilder stringBuilder);
 
     public String writePlaylistAsString(T playlist) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(EXTM3U).append('\n');
-
-        TextBuilder textBuilder = new TextBuilder(stringBuilder);
-
-        for (String comment : playlist.comments()) {
-            if (!comment.startsWith("EXT")) {
-                textBuilder.add("#").add(comment).add("\n");
-            }
+        playlist.version().ifPresent(version -> stringBuilder.append(EXT_X_VERSION)
+                .append(":").append(version).append('\n'));
+        if (playlist.independentSegments()) {
+            stringBuilder.append(EXT_X_INDEPENDENT_SEGMENTS).append('\n');
         }
-
-        write(playlist, textBuilder);
+        playlist.variables().forEach(variable -> stringBuilder.append(EXT_X_DEFINE)
+                .append(":").append(variable).append('\n'));
+        write(playlist, stringBuilder);
         return stringBuilder.toString();
     }
 
@@ -139,5 +136,4 @@ public abstract class AbstractPlaylistParser<T extends Playlist, B> {
     public ByteBuffer writePlaylistAsByteBuffer(T playlist) {
         return ByteBuffer.wrap(writePlaylistAsBytes(playlist));
     }
-
 }
