@@ -3,10 +3,7 @@ package io.lindstrom.m3u8.parser;
 import io.lindstrom.m3u8.model.*;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static io.lindstrom.m3u8.parser.Tags.*;
@@ -101,36 +98,41 @@ class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends AbstractPlayl
                 builder.discontinuitySequence(Long.parseLong(attributes));
                 break;
 
-            case EXT_X_DATERANGE:
-//                mediaSegmentBuilder.dateRange(DateRange);
-                break;
-            case EXT_X_CUE_OUT:
-//                mediaSegmentBuilder.cueOut(cueOutParser.parse(attributes));
-                break;
-            case EXT_X_CUE_IN:
-//                mediaSegmentBuilder.cueIn(cueInParser.parse(attributes));
-                break;
             case EXT_X_ALLOW_CACHE:
                 builder.allowCache(false);
                 break;
+
             case EXT_X_GAP:
                 mediaSegmentBuilder.gap(true);
                 break;
+
             case EXT_X_BITRATE:
                 mediaSegmentBuilder.bitrate(Long.parseLong(attributes));
                 break;
+
             case EXT_X_SKIP:
                 String[] number = attributes.split("=");
                 builder.skip(Skip.of(Integer.parseInt(number[1])));
                 break;
+
+            case EXT_X_RENDITION_REPORT:
+                builder.renditionReports(Collections.singleton(RenditionReport.of(attributes)));
+                break;
+
+            case EXT_X_CUE_OUT:
+                mediaSegmentBuilder.cueOut(Double.parseDouble(attributes));
+                break;
+
+            case EXT_X_CUE_IN:
+                mediaSegmentBuilder.cueIn(true);
+                break;
+
             case EXT_X_SERVER_CONTROL:
-                break;
             case EXT_X_PART_INF:
-                break;
             case EXT_X_PART:
-                break;
             case EXT_X_PRELOAD_HINT:
-                break;
+            case EXT_X_OTHER:
+            case EXT_X_DATERANGE:
             default:
                 if (optionalTagsSupport.stream()
                         .noneMatch(tagsSupport -> tagsSupport.supports(prefix))) {

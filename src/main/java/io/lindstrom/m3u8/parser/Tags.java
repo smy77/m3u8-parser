@@ -140,6 +140,8 @@ class Tags {
     static final String EXT_X_SKIP = "#EXT-X-SKIP";
     static final String EXT_X_PART = "#EXT-X-PART";
     static final String EXT_X_PRELOAD_HINT = "#EXT-X-PRELOAD-HINT";
+    static final String EXT_X_RENDITION_REPORT = "#EXT-X-RENDITION-REPORT";
+    static final String EXT_X_OTHER = "#EXT-X-OTHER";
 
 
 }
