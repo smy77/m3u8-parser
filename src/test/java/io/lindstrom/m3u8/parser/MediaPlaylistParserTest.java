@@ -51,7 +51,7 @@ public class MediaPlaylistParserTest {
                 "#EXT-X-MEDIA-SEQUENCE:0\n" +
                 "#EXTINF:0.96,\n" +
                 "5UkiTad9_3021444571_copy7.ts\n" +
-                "#EXTINF:0.000011,\n" +
+                "#EXTINF:1.1E-5,\n" +
                 "5UkiTad9_3021444571_copy8.ts\n";
 
         assertEquals(actual, expected);

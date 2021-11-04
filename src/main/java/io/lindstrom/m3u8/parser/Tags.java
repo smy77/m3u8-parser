@@ -126,4 +126,20 @@ class Tags {
 
     static final String YES = "YES";
     static final String NO = "NO";
+
+    // EXT-X-CUE-OUT
+    static final String EXT_X_CUE_OUT = "#EXT-X-CUE-OUT";
+    static final String EXT_X_CUE_IN = "#EXT-X-CUE-IN";
+
+    static final String EXT_X_ALLOW_CACHE = "#EXT-X-ALLOW-CACHE";
+    static final String EXT_X_BITRATE = "#EXT-X-BITRATE";
+    static final String EXT_X_GAP = "#EXT-X-GAP";
+
+    static final String EXT_X_SERVER_CONTROL = "#EXT-X-SERVER-CONTROL";
+    static final String EXT_X_PART_INF = "#EXT-X-PART-INF";
+    static final String EXT_X_SKIP = "#EXT-X-SKIP";
+    static final String EXT_X_PART = "#EXT-X-PART";
+    static final String EXT_X_PRELOAD_HINT = "#EXT-X-PRELOAD-HINT";
+
+
 }
