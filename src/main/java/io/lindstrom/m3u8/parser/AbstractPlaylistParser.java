@@ -135,8 +135,8 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
         }
         playlist.startTimeOffset().ifPresent(startTimeOffset->stringBuilder.append(EXT_X_START)
                 .append(":").append(startTimeOffset).append('\n'));
-        playlist.variables().forEach(variables -> stringBuilder.append(EXT_X_VERSION)
-                .append(":").append(variables).append('\n'));
+        playlist.variables().stream().findAny().ifPresent(variable -> stringBuilder.append(EXT_X_VERSION)
+                .append(":").append(variable).append('\n'));
         write(playlist, stringBuilder);
         return stringBuilder.toString();
     }

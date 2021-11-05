@@ -1,6 +1,5 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MediaPlaylist;
 import io.lindstrom.m3u8.model.StandardMediaPlaylist;
 import org.junit.Test;
 import org.junit.runner.RunWith;
