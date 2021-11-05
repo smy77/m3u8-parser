@@ -1,9 +1,6 @@
 package io.lindstrom.m3u8.parser;
 
-import io.lindstrom.m3u8.model.MasterPlaylist;
 import io.lindstrom.m3u8.model.Playlist;
-import io.lindstrom.m3u8.model.StandardMediaPlaylistBuilder;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -128,15 +125,6 @@ abstract class AbstractPlaylistParser<T extends Playlist, B> {
                 textBuilder.add("#").add(comment).add("\n");
             }
         }
-        playlist.version().ifPresent(version -> stringBuilder.append(EXT_X_VERSION)
-                .append(":").append(version).append('\n'));
-        if (playlist.independentSegments()) {
-            stringBuilder.append(EXT_X_INDEPENDENT_SEGMENTS).append('\n');
-        }
-        playlist.startTimeOffset().ifPresent(startTimeOffset->stringBuilder.append(EXT_X_START)
-                .append(":").append(startTimeOffset).append('\n'));
-        playlist.variables().stream().findAny().ifPresent(variable -> stringBuilder.append(EXT_X_VERSION)
-                .append(":").append(variable).append('\n'));
         write(playlist, stringBuilder);
         return stringBuilder.toString();
     }

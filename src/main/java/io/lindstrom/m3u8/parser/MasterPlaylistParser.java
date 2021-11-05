@@ -33,10 +33,6 @@ import static io.lindstrom.m3u8.parser.Tags.*;
  * This implementation is reusable and thread safe.
  */
 public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist, MasterPlaylist.Builder> {
-    private final VariantParser variantParser = new VariantParser();
-    private final IFrameParser iFrameParser = new IFrameParser();
-    private final AlternativeRenditionParser alternativeRenditionParser = new AlternativeRenditionParser();
-
     private final ParsingMode parsingMode;
 
     public MasterPlaylistParser() {
@@ -77,14 +73,10 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
 
     @Override
     void write(MasterPlaylist playlist, StringBuilder stringBuilder) {
-        playlist.alternativeRenditions()
-                .forEach(value -> alternativeRenditionParser.write(value, stringBuilder));
-
-        playlist.variants()
-                .forEach(value -> variantParser.write(value, stringBuilder));
-
-        playlist.iFrameVariants()
-                .forEach(value -> iFrameParser.write(value, stringBuilder));
+        for (MasterPlaylistTag tag : MasterPlaylistTag.tags.values()) {
+            TextBuilder textBuilder = new TextBuilder(stringBuilder);
+            tag.write(playlist, textBuilder);
+        }
     }
 
     @Override

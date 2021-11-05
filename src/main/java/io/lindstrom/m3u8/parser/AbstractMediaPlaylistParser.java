@@ -7,23 +7,17 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import static io.lindstrom.m3u8.parser.Tags.*;
+import static io.lindstrom.m3u8.parser.Tags.EXT_X_START;
 
 public class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends AbstractPlaylistParser<P, MediaPlaylistCreator<P>> {
-    private final ByteRangeParser byteRangeParser = new ByteRangeParser();
-    private final SegmentMapParser segmentMapParser = new SegmentMapParser(byteRangeParser);
-    private final SegmentKeyParser segmentKeyParser = new SegmentKeyParser();
     private final List<TagsSupport> optionalTagsSupport = new ArrayList<>();
-
-
     protected Supplier<MediaPlaylistCreator<P>> builderSupplier;
     ParsingMode parsingMode;
 
     public AbstractMediaPlaylistParser(Supplier<MediaPlaylistCreator<P>> supplier) {
         this.builderSupplier = supplier;
     }
-    public AbstractMediaPlaylistParser(ParsingMode parsingMode) {
-        this.parsingMode = parsingMode;
-    }
+
     public AbstractMediaPlaylistParser(Supplier<MediaPlaylistCreator<P>> supplier, ParsingMode parsingMode) {
         this.builderSupplier = supplier;
         this.parsingMode = parsingMode;
