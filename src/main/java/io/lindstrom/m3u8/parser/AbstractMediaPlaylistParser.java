@@ -36,6 +36,13 @@ public class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends Abstra
             MediaPlaylistTag.tags.get(prefix).read(builderWrapper.playlistBuilder(), attributes, parsingMode);
         } else if (MediaSegmentTag.tags.containsKey(prefix)) {
             MediaSegmentTag.tags.get(prefix).read(builderWrapper.segmentBuilder(), attributes, parsingMode);
+            if (MediaSegmentTag.tags.get(prefix)==MediaSegmentTag.EXT_X_CUE_OUT){
+                tagSupport(prefix,attributes,builderWrapper);
+            }else if(MediaSegmentTag.tags.get(prefix)==MediaSegmentTag.EXT_X_CUE_IN){
+                tagSupport(prefix,attributes,builderWrapper);
+            }else if(MediaSegmentTag.tags.get(prefix)==MediaSegmentTag.EXT_X_CUE_SPAN){
+                tagSupport(prefix,attributes,builderWrapper);
+            }
         } else if (MediaPlaylistEndTag.tags.containsKey(prefix)){
             MediaPlaylistEndTag.tags.get(prefix).read(builderWrapper.playlistBuilder(), attributes, parsingMode);
         } else if (parsingMode.failOnUnknownTags()) {
@@ -82,4 +89,25 @@ public class AbstractMediaPlaylistParser<P extends MediaPlaylist> extends Abstra
             tag.write(playlist, textBuilder);
         }
     }
+
+    private void tagSupport(String prefix, String attributes, MediaPlaylistCreator<P> builderWrapper) throws PlaylistParserException{
+        try {
+            optionalTagsSupport.stream()
+                    .filter(tagsSupport -> tagsSupport.supports("#"+prefix))
+                    .forEach(tagsSupport -> {
+                        try {
+                            tagsSupport.process(prefix, attributes, builderWrapper);
+                        } catch (PlaylistParserException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof PlaylistParserException) {
+                throw (PlaylistParserException) e.getCause();
+            }
+            throw e;
+        }
+    }
 }
+

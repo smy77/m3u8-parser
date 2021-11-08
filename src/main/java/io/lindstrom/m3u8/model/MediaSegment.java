@@ -2,6 +2,7 @@ package io.lindstrom.m3u8.model;
 
 import org.immutables.value.Value;
 
+import javax.annotation.Nullable;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,9 @@ public interface MediaSegment {
     default boolean cueIn() {
         return false;
     }
+
+    @Nullable
+    List<CueSpan> cueSpan();
 
     @Value.Default
     default boolean gap() {

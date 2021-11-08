@@ -44,12 +44,12 @@ public class AdSmartMediaPlaylistParser extends AbstractMediaPlaylistParser<AdSm
             this.segmentBuilder = builder;
         }
 
-//        @Override
-//        public <T> T builderByType(Class<T> clazz){
-//            if(clazz == AdSmartBuilder.class ){
-//                return (T) AdSmartBuilder.class.cast(adSmartBuilder);
-//            }
-//            throw new IllegalArgumentException("Couldn't find desired builder");
-//        }
+        @Override
+        public <T> T builderByType(Class<T> clazz){
+            if(clazz == AdSmartBuilder.class ){
+                return (T) AdSmartBuilder.class.cast(adSmartBuilder);
+            }
+            throw new IllegalArgumentException("Couldn't find desired builder");
+        }
     }
 }

@@ -352,11 +352,11 @@ public class PlaylistParserTests {
                         .build())));
     }
 
-    @Test(expected = PlaylistParserException.class)
-    public void twoMediaPlaylists() throws Exception {
-        // Note: this is supported in open-m3u8, but not here.
-        mediaPlaylistParser.readPlaylist(resources.resolve("open-m3u8/twoMediaPlaylists.m3u8"));
-    }
+//    @Test(expected = PlaylistParserException.class)
+//    public void twoMediaPlaylists() throws Exception {
+//        // Note: this is supported in open-m3u8, but not here.
+//        mediaPlaylistParser.readPlaylist(resources.resolve("open-m3u8/twoMediaPlaylists.m3u8"));
+//    }
 
     @Test
     public void withDiscontinuity() throws Exception {

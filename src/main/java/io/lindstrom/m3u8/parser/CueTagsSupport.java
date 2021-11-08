@@ -31,7 +31,7 @@ public class CueTagsSupport implements TagsSupport {
 
         AdSmartBuilder builder =  (AdSmartBuilder) container.builderByType(AdSmartBuilder.class);
 
-        switch(prefix){
+        switch("#"+prefix){
             case EXT_X_CUE_OUT:
                 builder.cueOut(cueOutParser.parse(attributes));
 
