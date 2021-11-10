@@ -90,7 +90,7 @@ class ParserUtils {
         return builder.build();
     }
 
-    static String writeChannels(Channels channels) {
+    public static String writeChannels(Channels channels) {
         String attributes = String.valueOf(channels.count());
         if (!channels.objectCodingIdentifiers().isEmpty()) {
             attributes += "/" + String.join(",", channels.objectCodingIdentifiers());

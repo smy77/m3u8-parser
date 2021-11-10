@@ -10,7 +10,7 @@ public class MediaPlaylistCommentsTest {
 
     @Test
     public void shouldAddCommentToMasterPlaylist() {
-        MediaPlaylist playlist = MediaPlaylist.builder()
+        StandardMediaPlaylist playlist = StandardMediaPlaylist.builder()
                 .targetDuration(2)
                 .addComments(
                         "Test Comment")
@@ -26,7 +26,7 @@ public class MediaPlaylistCommentsTest {
 
     @Test
     public void shouldAddCommentsToMasterPlaylist() {
-        MediaPlaylist playlist = MediaPlaylist.builder()
+        StandardMediaPlaylist playlist = StandardMediaPlaylist.builder()
                 .targetDuration(2)
                 .addComments(
                         "Test Comment 1",
@@ -45,7 +45,7 @@ public class MediaPlaylistCommentsTest {
 
     @Test
     public void shouldHaveCommentBetweenInitAndVersion() {
-        MediaPlaylist playlist = MediaPlaylist.builder()
+        StandardMediaPlaylist playlist = StandardMediaPlaylist.builder()
                 .version(4)
                 .targetDuration(2)
                 .addComments("Test Comment")
@@ -62,7 +62,7 @@ public class MediaPlaylistCommentsTest {
 
     @Test
     public void shouldOmitCommentsThatBeginWithExt() {
-        MediaPlaylist playlist = MediaPlaylist.builder()
+        StandardMediaPlaylist playlist = StandardMediaPlaylist.builder()
                 .targetDuration(2)
                 .version(4)
                 .addComments(

@@ -103,6 +103,16 @@ enum MediaSegmentTag implements Tag<MediaSegment, MediaSegment.Builder> {
         }
     },
 
+    EXT_X_CUE_SPAN {
+        @Override
+        public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) throws PlaylistParserException {
+        }
+
+        @Override
+        public void write(MediaSegment mediaSegment, TextBuilder textBuilder) {
+        }
+    },
+
     EXT_X_BITRATE {
         @Override
         public void read(MediaSegment.Builder builder, String attributes, ParsingMode parsingMode) {

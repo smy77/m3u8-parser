@@ -37,13 +37,18 @@ public class RawPlaylist implements Playlist {
         return tags;
     }
 
-    static class Builder {
+    static class Builder implements PlaylistCreator<RawPlaylist> {
         private final Map<String, List<List<RawAttribute>>> tags = new TreeMap<>();
         void addTag(String tag, List<RawAttribute> attributes) {
             tags.computeIfAbsent(tag, k -> new ArrayList<>()).add(attributes);
         }
         RawPlaylist build() {
             return new RawPlaylist(tags);
+        }
+
+        @Override
+        public RawPlaylist create() {
+            return build();
         }
     }
 }

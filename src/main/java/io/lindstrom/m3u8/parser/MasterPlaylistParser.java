@@ -1,8 +1,12 @@
 package io.lindstrom.m3u8.parser;
 
 import io.lindstrom.m3u8.model.MasterPlaylist;
+import io.lindstrom.m3u8.model.MediaPlaylist;
 
+import java.util.Collections;
 import java.util.Iterator;
+
+import static io.lindstrom.m3u8.parser.Tags.*;
 
 /**
  * MasterPlaylistParser can read and write Master Playlists according to RFC 8216 (HTTP Live Streaming).
@@ -40,20 +44,14 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
     }
 
     @Override
-    void write(MasterPlaylist playlist, TextBuilder textBuilder) {
-        for (MasterPlaylistTag tag : MasterPlaylistTag.tags.values()) {
-            tag.write(playlist, textBuilder);
-        }
-    }
-
-    @Override
     MasterPlaylist.Builder newBuilder() {
         return MasterPlaylist.builder();
     }
 
+
     @Override
-    void onTag(MasterPlaylist.Builder builder, String name, String attributes, Iterator<String> lineIterator) throws PlaylistParserException{
-        MasterPlaylistTag tag = MasterPlaylistTag.tags.get(name);
+    void onTag(MasterPlaylist.Builder builder, String prefix, String attributes, Iterator<String> lineIterator) throws PlaylistParserException {
+        MasterPlaylistTag tag = MasterPlaylistTag.tags.get(prefix);
 
         if (tag == MasterPlaylistTag.EXT_X_STREAM_INF) {
             String uriLine = lineIterator.next();
@@ -64,7 +62,20 @@ public class MasterPlaylistParser extends AbstractPlaylistParser<MasterPlaylist,
         } else if (tag != null) {
             tag.read(builder, attributes, parsingMode);
         } else if (parsingMode.failOnUnknownTags()) {
-            throw new PlaylistParserException("Tag not implemented: " + name);
+            throw new PlaylistParserException("Tag not implemented: " + prefix);
+        }
+    }
+
+    @Override
+    void onURI(MasterPlaylist.Builder builder, String uri) throws PlaylistParserException {
+        throw new PlaylistParserException("Unexpected URI in master playlist");
+    }
+
+    @Override
+    void write(MasterPlaylist playlist, StringBuilder stringBuilder) {
+        for (MasterPlaylistTag tag : MasterPlaylistTag.tags.values()) {
+            TextBuilder textBuilder = new TextBuilder(stringBuilder);
+            tag.write(playlist, textBuilder);
         }
     }
 
