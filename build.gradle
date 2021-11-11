@@ -1,5 +1,5 @@
 group 'uk.sky.streaming'
-version '0.21-forked'
+version '0.21.0-forked'
 
 apply plugin: 'idea'
 apply plugin: 'java'

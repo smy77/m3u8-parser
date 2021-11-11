@@ -113,7 +113,7 @@ enum MediaPlaylistTag implements Tag<MediaPlaylist, StandardMediaPlaylistBuilder
     EXT_X_MEDIA_SEQUENCE {
         @Override
         public void read(StandardMediaPlaylistBuilder builder, String attributes, ParsingMode parsingMode) {
-            builder.mediaSequence(Long.parseLong(attributes));
+            builder.mediaSequence(Integer.parseInt(attributes));
 
         }
 
