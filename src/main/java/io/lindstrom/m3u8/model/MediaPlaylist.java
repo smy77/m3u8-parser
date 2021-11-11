@@ -12,7 +12,7 @@ public interface MediaPlaylist extends Playlist {
     int targetDuration();
 
     @Value.Default
-    default long mediaSequence() {
+    default int mediaSequence() {
         return 0;
     }
 
